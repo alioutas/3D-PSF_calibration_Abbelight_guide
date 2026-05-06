@@ -16,3 +16,7 @@ execute:
   echo: false
   warning: false
   message: false
+
+resources:
+  - videos/**
+  - images/**
