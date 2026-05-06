@@ -1,0 +1,278 @@
+﻿---
+title: "3D Calibration Workflow - Abbelight"
+format:
+  html:
+    toc: true
+    css: styles.css
+    code-fold: true
+    lightbox: true
+---
+
+> **Disclaimer:** This protocol is intended as a practical guide. As the software evolves, menu entries, labels, button names, layouts, and workflows may appear under different names, shapes, or forms.
+
+
+```{python}
+from IPython.display import HTML, Markdown, display
+
+
+VIDEO_FILES = {
+    "part1": "videos/Tutorial - 3D Calibration - Part 1 - NEO LiveImaging - Scenario z-stack.mp4",
+    "part2": "videos/Tutorial - 3D Calibration - Part 2 - ImageJ and NEO LiveImaging.mp4",
+}
+
+# Each list item is a step index: [0], [1], [2], ...
+# Set custom text per step here.
+STEP_CONTENT = {
+    "part1": [
+        {
+            "start": 0,
+            "end": 12,
+            "title": "Step 1: Create Scenario and Configure Z-stack Acquisition",
+            "action": "Load or create a Scenario with the specified configuration as shown above",
+            "explanation": "This step will automatically create a Scenario that will acquire z-stack of beads.",
+            "tip": "Make sure you use a slide that with tetraspek beads (100-200nm) that are well adhered to the coverslip. You can use poly-L-lysine to help with adhesion if needed.",
+        },
+        {
+            "start": 16,
+            "end": 64,
+            "title": "Step 2: Optimize Laser Intensity and Set Z-stack Start Position",
+            "action": "Test what the optimal laser intensity is for both 561 and 488 laser lines and make sure you adapt the values in the scenario.",
+            "explanation": "This step aims to optimize SNR and z-stack imaging conditions.",
+            "tip": "Focus in the middle of the z-stack and adjust the laser power to get a good signal without saturating the beads. You can also adjust the exposure time if needed, but try to keep laser power as low as possible to minimize photobleaching.",
+        },
+        {
+            "start": 64,
+            "end": 102,
+            "title": "Step 3: Move Focal Plane to Set Z-stack Start Position and start acquisition",
+            "action": "Move the focal plane closer to the coverslip. This way you set where the start of the z-stack is and press `start`. ",
+            "tip": "If you want to do a 1 Î¼m z-stack, adjust the focal plane about 500nm below the middle of the beads.",
+        },
+    ],
+    "part2": [
+        {
+            "start": 0,
+            "end": 17,
+            "title": "Step 1: Perform Initial Setup",
+            "action": "Open tif images from part 1 in ImageJ (FIJI) as a stack and then save R-camera and T-camera to separate tif files.",
+            "explanation": "Here you are preparing the acquired data for the calibration step. The R and T camera images will be used to compute the calibration transformation.",
+            "tip": " In ImageJ import the files as a stack (File > Import > Image Sequence) and make sure to select the correct folder and file pattern. Once the stack is open, you can use the 'Split Channels' function (Image > Color > Split Channels) to separate the R and T camera images. Then, save each channel as a separate tif file (File > Save As > Tiff).",
+        },
+        {
+            "start": 18,
+            "end": 42,
+            "title": "Step 2: Load Images and Configure Detection Settings in NeoLiveImaging",
+            "action": "In NeoLiveImaging click 'System' > 'Detection Settings' > 'Load files'. Then click 'show second camera' and 'deselect use z-stack infos'. Load R-camera and T-camera images.",
+            "explanation": "Here you are loading the saves z-stacks necessary for PSF calibration. By deselecting 'use z-stack infos' you are making sure that the software does not use the z-stack metadata to set the z-step size, which is important for accurate calibration.",
+        },
+        {
+            "start": 46,
+            "end": 79,
+            "title": "Step 3: Set Z-step Size and Selection of Beads for Calibration",
+            "action": "Type in the correct z-step size (e.g. 100nm) and click 'Next'. Then software will automatically select beads of high quality to perform calibration.",
+            "explanation": "Here the software will automatically select beads that are bright, well-defined, and not overlapping or too close to the edges of the field of view.",
+            "tip": "Focus on the highlighted region and watch the short clip for temporal context.",
+        },
+        {
+            "start": 79,
+            "end": 108,
+            "title": "Step 4: Adjust Z-range and Remove Outliers",
+            "action": "The calibration is now done and we will adjust a few things. First, adjust the zmin and zmax values to set the range for the calibration (recommended values: 'zmin' = -600 and 'zmax' = 600). Second, by clicking 'show curve info' you can deselect the beads that are far from the general trend (outliers). ",
+            "explanation": "Here you are adjusting the z-range for the PSF calibration and removing outliers. The z-range should be set to include all the beads that were selected for calibration. Removing outliers can help improve the accuracy of the calibration by excluding beads that do not fit the general trend.",
+            "tip": "Only remove the outliers that are very far from the general trend. You can toggle the mean for each algorithm to evaluate.",
+        },
+        {
+            "start": 108,
+            "end": 184,
+            "title": "Step 5: Repeat for all localization algorithms",
+            "action": "Repeat for all localization algorithms: Phasor, GaussianLSQ, GaussianMLE, C-spline",
+        },
+                {
+            "start": 184,
+            "end": 199,
+            "title": "Step 6: Save Calibration and Export Results to a folder",
+            "action": "After clicking 'Next' in the new panel select 'use polynomial calibration', select directory to save PSF calibrations, and click finish.",
+            "explanation": "Here you are saving all calibrations to a folder to use with NeoAnalysis for lo3D localization.",
+        },
+    ],
+}
+
+
+def video_html(video_path, start=None, end=None):
+    if start is not None and end is not None:
+        src = f"{video_path}#t={int(start)},{int(end)}"
+    elif start is not None:
+        src = f"{video_path}#t={int(start)}"
+    elif end is not None:
+        src = f"{video_path}#t=0,{int(end)}"
+    else:
+        src = video_path
+
+    return (
+        '<video controls preload="metadata" style="width:100%; height:auto;">'
+        f'<source src="{src}" type="video/mp4">'
+        "Your browser does not support the video tag."
+        "</video>"
+    )
+
+
+def render_part(part_name):
+    import os
+    video_path = VIDEO_FILES.get(part_name)
+    steps = STEP_CONTENT.get(part_name, [])
+
+    if not video_path:
+        display(Markdown(f"_No source video configured for `{part_name}` in `VIDEO_FILES`._"))
+        return
+
+    if not os.path.exists(video_path):
+        display(Markdown(f"_Configured source video not found: `{video_path}`._"))
+        return
+
+    if not steps:
+        display(Markdown(f"_No steps configured for `{part_name}` in `STEP_CONTENT`._"))
+        return
+
+    for idx, step in enumerate(steps):
+        step_num = idx + 1
+        step_id = f"fig-{part_name}-step{step_num:02d}"
+        start_sec = step.get("start")
+        end_sec = step.get("end")
+        clip_embed = video_html(video_path, start=start_sec, end=end_sec)
+        notes = []
+        action = step.get("action", "").strip()
+        explanation = step.get("explanation", "").strip()
+        tip = step.get("tip", "").strip()
+        if action:
+            notes.append(f"**Action:** {action}")
+        if explanation:
+            notes.append(f"**Explanation:** {explanation}")
+        if tip:
+            notes.append(f"**Tip:** {tip}")
+        display(Markdown(f"## {step.get('title', f'Step {step_num}')}"))
+        display(
+            HTML(
+                f"""
+<div id="{step_id}" class="quarto-layout-panel">
+  {clip_embed}
+</div>
+"""
+            )
+        )
+        if notes:
+            display(Markdown("\n\n".join(notes)))
+```
+
+# Overview
+
+**Short action clips** will guide you for a reproducible 3D calibration workflow.
+
+# Part 1 - Z-stack Calibration
+
+Create a calibration **Scenario** that looks like the one in the image below:
+![](/images/part1/scenario.png)
+
+
+**Iterations:** `21`
+
+<style>
+.part1-config-columns {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(260px, 1fr));
+    gap: 1rem;
+    align-items: start;
+}
+
+.part1-config-columns > .column {
+    min-width: 0;
+}
+</style>
+
+:::: {.columns .part1-config-columns}
+::: {.column style="border-right: 1px solid #ddd; padding-right: 1rem;"}
+**1. Image block**
+
+| Laser | Toggle | Power |
+|---|---|---|
+| `640` | `off` | % `0` |
+| `561` | `on` | % `30` |
+| `488` | `on` | % `30` |
+| `405` | `off` | % `0` |
+
+| Parameter | Value |
+|---|---|
+| ROI size (px) | `650` |
+| Exposure (ms) | `10` |
+| Number of frame | `1` |
+| Beam angle T | `IRF` |
+| Filter wheel T | `ET600/50` |
+| Filter wheel R | `ET525/50` |
+:::
+
+::: {.column style="border-right: 1px solid #ddd; padding: 0 1rem;"}
+**2. Signal block**
+
+| Parameter | Value |
+|---|---|
+| Type | `Send` |
+| Protocol | `TCP` |
+| Host | `127.0.0.1` |
+| Port | `9999` |
+| Content | `MoveZ 100` |
+| Mode | `Client` |
+:::
+
+::: {.column}
+**3. Signal block**
+
+| Parameter | Value |
+|---|---|
+| Type | `Wait` |
+| Protocol | `TCP` |
+| Host | `127.0.0.1` |
+| Port | `8888` |
+| Content | `OK` |
+| Mode | `Server` |
+:::
+::::
+```{python}
+render_part("part1")
+```
+
+# Part 2 - ImageJ + Calibration
+
+```{python}
+render_part("part2")
+```
+
+## Example calibration curves for the different algorithms:
+:::: {.columns}
+::: {.column width="25%"}
+**Phasor**
+
+![](/images/part2/phasor.png)
+:::
+::: {.column width="25%"}
+**Gaussian LSQ**
+
+![](/images/part2/GaussianLSQ.png)
+:::
+::: {.column width="25%"}
+**Gaussian MLE**
+
+![](/images/part2/GaussianMLE.png)
+:::
+::: {.column width="25%"}
+**CSpline**
+
+![](/images/part2/CSpline.png)
+:::
+::::
+
+# Authors
+
+Protocol compiled by **Antonios Lioutas**
+
+Videos by **Benjamin Compans** and **Clementine Pennaforte**
+
+> Last update: 20260506
+

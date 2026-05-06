@@ -1,0 +1,79 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "3D Calibration Workflow - Abbelight",
+    "section": "",
+    "text": "Disclaimer: This protocol is intended as a practical guide. As the software evolves, menu entries, labels, button names, layouts, and workflows may appear under different names, shapes, or forms."
+  },
+  {
+    "objectID": "index.html#step-1-create-scenario-and-configure-z-stack-acquisition",
+    "href": "index.html#step-1-create-scenario-and-configure-z-stack-acquisition",
+    "title": "3D Calibration Workflow - Abbelight",
+    "section": "Step 1: Create Scenario and Configure Z-stack Acquisition",
+    "text": "Step 1: Create Scenario and Configure Z-stack Acquisition"
+  },
+  {
+    "objectID": "index.html#step-2-optimize-laser-intensity-and-set-z-stack-start-position",
+    "href": "index.html#step-2-optimize-laser-intensity-and-set-z-stack-start-position",
+    "title": "3D Calibration Workflow - Abbelight",
+    "section": "Step 2: Optimize Laser Intensity and Set Z-stack Start Position",
+    "text": "Step 2: Optimize Laser Intensity and Set Z-stack Start Position"
+  },
+  {
+    "objectID": "index.html#step-3-move-focal-plane-to-set-z-stack-start-position-and-start-acquisition",
+    "href": "index.html#step-3-move-focal-plane-to-set-z-stack-start-position-and-start-acquisition",
+    "title": "3D Calibration Workflow - Abbelight",
+    "section": "Step 3: Move Focal Plane to Set Z-stack Start Position and start acquisition",
+    "text": "Step 3: Move Focal Plane to Set Z-stack Start Position and start acquisition"
+  },
+  {
+    "objectID": "index.html#step-1-perform-initial-setup",
+    "href": "index.html#step-1-perform-initial-setup",
+    "title": "3D Calibration Workflow - Abbelight",
+    "section": "Step 1: Perform Initial Setup",
+    "text": "Step 1: Perform Initial Setup"
+  },
+  {
+    "objectID": "index.html#step-2-load-images-and-configure-detection-settings-in-neoliveimaging",
+    "href": "index.html#step-2-load-images-and-configure-detection-settings-in-neoliveimaging",
+    "title": "3D Calibration Workflow - Abbelight",
+    "section": "Step 2: Load Images and Configure Detection Settings in NeoLiveImaging",
+    "text": "Step 2: Load Images and Configure Detection Settings in NeoLiveImaging"
+  },
+  {
+    "objectID": "index.html#step-3-set-z-step-size-and-selection-of-beads-for-calibration",
+    "href": "index.html#step-3-set-z-step-size-and-selection-of-beads-for-calibration",
+    "title": "3D Calibration Workflow - Abbelight",
+    "section": "Step 3: Set Z-step Size and Selection of Beads for Calibration",
+    "text": "Step 3: Set Z-step Size and Selection of Beads for Calibration"
+  },
+  {
+    "objectID": "index.html#step-4-adjust-z-range-and-remove-outliers",
+    "href": "index.html#step-4-adjust-z-range-and-remove-outliers",
+    "title": "3D Calibration Workflow - Abbelight",
+    "section": "Step 4: Adjust Z-range and Remove Outliers",
+    "text": "Step 4: Adjust Z-range and Remove Outliers"
+  },
+  {
+    "objectID": "index.html#step-5-repeat-for-all-localization-algorithms",
+    "href": "index.html#step-5-repeat-for-all-localization-algorithms",
+    "title": "3D Calibration Workflow - Abbelight",
+    "section": "Step 5: Repeat for all localization algorithms",
+    "text": "Step 5: Repeat for all localization algorithms"
+  },
+  {
+    "objectID": "index.html#step-6-save-calibration-and-export-results-to-a-folder",
+    "href": "index.html#step-6-save-calibration-and-export-results-to-a-folder",
+    "title": "3D Calibration Workflow - Abbelight",
+    "section": "Step 6: Save Calibration and Export Results to a folder",
+    "text": "Step 6: Save Calibration and Export Results to a folder"
+  },
+  {
+    "objectID": "index.html#example-calibration-curves-for-the-different-algorithms",
+    "href": "index.html#example-calibration-curves-for-the-different-algorithms",
+    "title": "3D Calibration Workflow - Abbelight",
+    "section": "Example calibration curves for the different algorithms:",
+    "text": "Example calibration curves for the different algorithms:\n\n\nPhasor\n\n\nGaussian LSQ\n\n\nGaussian MLE\n\n\nCSpline"
+  }
+]

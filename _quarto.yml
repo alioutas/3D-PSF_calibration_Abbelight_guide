@@ -1,0 +1,18 @@
+project:
+  type: website
+  title: "3D Calibration Abbelight"
+  output-dir: docs
+
+format:
+  html:
+    toc: true
+    number-sections: false
+    css: styles.css
+    code-fold: true
+    lightbox: true
+    fig-cap-location: bottom
+
+execute:
+  echo: false
+  warning: false
+  message: false
