@@ -25,7 +25,7 @@ VIDEO_FILES = {
 STEP_CONTENT = {
     "part1": [
         {
-            "start": 0,
+            "start": 1,
             "end": 12,
             "title": "Step 1: Create Scenario and Configure Z-stack Acquisition",
             "action": "Load or create a Scenario with the specified configuration as shown above",
@@ -50,7 +50,7 @@ STEP_CONTENT = {
     ],
     "part2": [
         {
-            "start": 0,
+            "start": 1,
             "end": 17,
             "title": "Step 1: Perform Initial Setup",
             "action": "Open tif images from part 1 in ImageJ (FIJI) as a stack and then save R-camera and T-camera to separate tif files.",
